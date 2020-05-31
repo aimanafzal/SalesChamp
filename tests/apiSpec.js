@@ -1,46 +1,21 @@
-var assert = require('assert');
-// var sinon = require('sinon');
-// var MockReq = require('mock-req');
-// var MockRes = require('mock-res');
-
-var http = require('http');
-
-var router = require('../server/routers/mongo');
-const Movie = require('../backend/server/model/movie');
-const Genre = require('../backend/server/model/genre');
-const MONGO_CONFIG = require('../backend/server/config/mongo.js');
+const Movie = require('../server/model/movie');
+const Genre = require('../server/model/genre');
+const MONGO_CONFIG = require('../server/config/mongo.js');
 const mongoose = require('mongoose');
 
 let mongoConnect = `${MONGO_CONFIG.mongoURL}`
 
-const options = {
-    ssl: false,
-    sslValidate: false,
-    poolSize: 1,
-    socketTimeoutMS: 5000,
-    replicaSet: MONGO_CONFIG.MONGO_REPLICA_SET_NAME
-};
-
-mongoose.connect(mongoConnect, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000
-}).catch(err => console.log(err.reason));
-
-
 describe('Connection', function () {
-    mongoose.Promise = global.Promise;
-    mongoose.connect(mongoConnect, options)
-        .catch((err) => {
-            if (err) console.error(err);
-        });
+    mongoose.connect(mongoConnect, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000
+    }).catch(err => console.log(err.reason));
 })
 
 describe('#AddMovies()', function () {
     it('respond with a pass or fail', function (done) {
-
         const movie = new Movie({
-
             name: "JamesBond Returns",
             description: "In search of diamonds",
             releaseDate: "30/05/2020",
@@ -49,7 +24,6 @@ describe('#AddMovies()', function () {
             rating: "7"
 
         });
-
 
         movie.save((err, res) => {
             if (err)
@@ -74,8 +48,6 @@ describe('#GetMovies()', function () {
 });
 
 
-
-
 describe('#Update a movie()', function () {
     it('Respond with updating a movie with pass or fail', function (done) {
         var movies = Movie.find({})
@@ -90,16 +62,14 @@ describe('#Update a movie()', function () {
                 safe: true,
                 upsert: true,
                 new: true,
-            }).then((err, res) => {
-                if (err) return done(err);
-                else
+            }, (err, res) => {
+                if (res)
                     return done();
-            });
+                else return done(err)
+            })
         }
     });
 });
-
-
 
 describe('#Delete a movie', function () {
     it('Respond with deleting a movie with pass or fail', function (done) {
@@ -107,7 +77,7 @@ describe('#Delete a movie', function () {
         if (movies.length >= 1) {
 
             var id = movies[0]._id
-            Movie.findByIdAndDelete(id).then((err, res) => {
+            Movie.findByIdAndDelete(id,(err,res) => {
                 if (err)
                     return done(err);
                 else
@@ -117,13 +87,10 @@ describe('#Delete a movie', function () {
     });
 });
 
-
-
-
 describe('#Delete all movies', function () {
     it('Respond with deleting all movies with pass or fail', function (done) {
 
-        Movie.deleteMany({}).then((err) => {
+        Movie.deleteMany({},(err) => {
             if (err)
                 return done(err);
             else
@@ -133,14 +100,7 @@ describe('#Delete all movies', function () {
 
 });
 
-
-
-
 // Genres
-
-
-
-
 describe('#AddGenres()', function () {
     it('respond with a pass or fail', function (done) {
 
@@ -170,9 +130,6 @@ describe('#GetGenres', function () {
     });
 });
 
-
-
-
 describe('#Update a genre', function () {
     it('Respond with updating a genre with pass or fail', function (done) {
         var genres = Genre.find({})
@@ -197,8 +154,6 @@ describe('#Update a genre', function () {
     });
 });
 
-
-
 describe('#Delete a genre', function () {
     it('Respond with deleting a genre with pass or fail', async function (done) {
         var genres = await Genre.find({})
@@ -213,18 +168,8 @@ describe('#Delete a genre', function () {
     });
 });
 
-
-
-
-
 describe('#Delete all genres', function () {
     it('Respond with deleting all movies with pass or fail', async function (done) {
-        // Genre.deleteMany({}).then ((err) => {
-        //     if (err)
-        //         return done(err);
-        //     else
-        //         return done()
-        // })
         var isDeleted = await Genre.deleteMany({})
         if (isDeleted)
             return done();
