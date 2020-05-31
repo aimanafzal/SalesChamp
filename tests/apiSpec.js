@@ -11,30 +11,30 @@ const Genre = require('../backend/server/model/genre');
 const MONGO_CONFIG = require('../backend/server/config/mongo.js');
 const mongoose = require('mongoose');
 
-let mongoConnect = `mongodb://${MONGO_CONFIG.mongoURL}:27017`;
-
+let mongoConnect = `${MONGO_CONFIG.mongoURL}`
 
 const options = {
     ssl: false,
     sslValidate: false,
     poolSize: 1,
     socketTimeoutMS: 5000,
-    connectionTimeoutMS: 0,
     replicaSet: MONGO_CONFIG.MONGO_REPLICA_SET_NAME
 };
 
+mongoose.connect(mongoConnect, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000
+}).catch(err => console.log(err.reason));
 
 
 describe('Connection', function () {
-
     mongoose.Promise = global.Promise;
     mongoose.connect(mongoConnect, options)
         .catch((err) => {
             if (err) console.error(err);
         });
 })
-
-
 
 describe('#AddMovies()', function () {
     it('respond with a pass or fail', function (done) {

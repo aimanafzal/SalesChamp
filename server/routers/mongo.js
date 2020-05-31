@@ -27,17 +27,16 @@ module.exports = function (app) {
     sslValidate: false,
     poolSize: 1,
     socketTimeoutMS: 5000,
-    connectionTimeoutMS: 0,
+    // connectionTimeoutMS: 0,
     replicaSet: MONGO_CONFIG.MONGO_REPLICA_SET_NAME
   };
+  let mongoConnect = `${MONGO_CONFIG.mongoURL}`
+  mongoose.connect(mongoConnect, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000
+  }).catch(err => console.log(err.reason));
 
-  let mongoConnect = `mongodb://${MONGO_CONFIG.mongoURL}:27017`;
-
-  mongoose.Promise = global.Promise;
-  mongoose.connect(mongoConnect, options)
-    .catch((err) => {
-      if (err) console.error(err);
-    });
 
   let db = mongoose.connection;
 
