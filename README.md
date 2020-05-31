@@ -1,4 +1,4 @@
-Postman collection:
+Postman collection can be accessed throug the link give below or a copy of collection is available on the root:
 https://www.getpostman.com/collections/2eac8c3525d5f390eaca
 
 Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it.
