@@ -16,6 +16,7 @@ require('./routers/index')(app, server);
 const port = process.env.PORT || localConfig.port;
 
 logger.info(`Starting server on port ${port}`)
+console.log(`Starting server on port ${port}`)
 server.listen(port, function(){
   logger.info(`backend listening on http://localhost:${port}/appmetrics-dash`);
   logger.info(`backend listening on http://localhost:${port}`);
