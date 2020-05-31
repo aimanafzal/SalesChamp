@@ -5,6 +5,8 @@ Instructions and code to deploy MongoDB, a backend Node.js microservice that con
 
 The backend uses Express and features a `/api/movies` endpoint with CRUD operations enabled.
 The backend uses Express and features a `/api/genres` endpoint with CRUD operations enabled.
+Run the test script by using npm test
+
 
 MongoDB is deployed with persistence and replicas: this is where items are stored.
 
