@@ -1,5 +1,12 @@
 Postman collection can be accessed throug the link give below or a copy of collection is available on the root:
 https://www.getpostman.com/collections/2eac8c3525d5f390eaca
+Link to Heroku to get started with APIs call, the mlab for cloud mongodb is already configured.
+https://homitag.herokuapp.com/api/genres/<Your API CALL>
+https://homitag.herokuapp.com/api/movies/<Your API CALL>
+
+Mlab for mongoDB is already connected within the source to get started with calling the APIs on the go. But if you want to configure a local database, the instructions are provided below.
+
+Either you can utilize it by Docker or Kubernetes.
 
 Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it.
 
@@ -14,7 +21,6 @@ Tested using the Kubernetes service provided by [Docker for Desktop on Mac](http
 
 ## Quickstart for local development
 - Deploy MongoDB as a Docker container or on Kubernetes first
-- `cd backend`
 - `npm install`
 - `npm start`
 
