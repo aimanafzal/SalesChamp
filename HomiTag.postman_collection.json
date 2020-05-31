@@ -118,7 +118,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete Movie",
+			"name": "Delete Movies",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -133,6 +133,28 @@
 					"path": [
 						"api",
 						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Movie by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://homitag.herokuapp.com/api/movies/5ed3d0ff06f67e0024611c8e",
+					"protocol": "https",
+					"host": [
+						"homitag",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"movies",
+						"5ed3d0ff06f67e0024611c8e"
 					]
 				}
 			},
@@ -215,6 +237,50 @@
 						"api",
 						"genres",
 						"5ed380d301bcc57af4e60b46"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Genre by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://homitag.herokuapp.com/api/genres/5ed3d15d06f67e0024611c8f",
+					"protocol": "https",
+					"host": [
+						"homitag",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"genres",
+						"5ed3d15d06f67e0024611c8f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Genres",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://homitag.herokuapp.com/api/genres/",
+					"protocol": "https",
+					"host": [
+						"homitag",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"genres",
+						""
 					]
 				}
 			},
