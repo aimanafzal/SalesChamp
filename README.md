@@ -6,7 +6,7 @@ Instructions and code to deploy MongoDB, a backend Node.js microservice that con
 The backend uses Express and features a `/api/movies` endpoint with CRUD operations enabled.
 The backend uses Express and features a `/api/genres` endpoint with CRUD operations enabled.
 
-MongoDB is deployed with persistence and replicas: this is where todo items are stored.
+MongoDB is deployed with persistence and replicas: this is where items are stored.
 
 Tested using the Kubernetes service provided by [Docker for Desktop on Mac](https://docs.docker.com/docker-for-mac/kubernetes/).
 
@@ -76,7 +76,7 @@ Data is stored in MongoDB (both in the container and in the persistent volume on
 
 
 ### Like to script things too?
-`./create-todos.sh x` where x is how many todos you would like to create. A POST request is sent to the to create x amount of todos by sending POST requests to the `api/movies endpoint` `api/genres endpoint`.
+`./script.sh x` where x is how many records you would like to create. A POST request is sent to the to create x amount of records by sending POST requests to the `api/movies endpoint` `api/genres endpoint`.
 
 
 ### Like dashboards?
@@ -96,4 +96,3 @@ This works because in our Node.js application, `service.yaml` has the following 
 
 The `appmetrics-prometheus` module sends data to the `/metrics` endpoint, which is scraped by Prometheus automatically: you can view the collected metrics at `localhost:30555/metrics`.
 
-With the Prometheus UI, create a graph for `http_requests_total` and then run `./create-todos.sh 500`. You will see the request total increase by 500 (look for POSTs, an example graph is `http_requests_total{code="200",handler="/api/todos",instance="10.1.1.15:30555",job="kubernetes-service-endpoints",kubernetes_name="backend-service",kubernetes_namespace="default",method="post"}`). 

@@ -18,5 +18,5 @@ service:
 services:
   mongo:
      url: mongo-mongodb
-     name: todos
+     name: script
      env: production
