@@ -272,7 +272,7 @@ module.exports = function (app) {
 
   });
 
-  router.delete('/movies/:genre_id', async (req, res) => {
+  router.delete('/genres/:genre_id', async (req, res) => {
 
     try {
       var genreId = req.params.genre_id
