@@ -1,7 +1,7 @@
 {
   "name": "node-backend",
   "version": "1.0.0",
-  "description": "Cool MERN app for Docker/Kubernetes",
+  "description": "Backend Code",
   "private": true,
   "engines": {
     "node": "^12.14.1"

@@ -1,7 +1,5 @@
 
-Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it, and a frontend that connects to the backend.
-
-The frontend uses React and is served with nginx.
+Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it.
 
 The backend uses Express and features a `/api/movies` endpoint with CRUD operations enabled.
 The backend uses Express and features a `/api/genres` endpoint with CRUD operations enabled.
@@ -15,18 +13,14 @@ Tested using the Kubernetes service provided by [Docker for Desktop on Mac](http
 - `cd backend`
 - `npm install`
 - `npm start`
-- `cd ../frontend`
-- `npm install`
-- `npm start`
 
 ## Quickstart for Docker
-- `docker build -f frontend/Dockerfile -t frontend:v1.0.0 frontend`
 - `docker build -f backend/Dockerfile  -t backend:v1.0.0 backend`
 - `docker pull mongo`
 - `docker run -d -p 27017:27017 --name mern-mongo mongo `
 - `export MONGO_URL=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mern-mongo)`
 - `docker run -p 30555:30555 -e MONGO_URL=$MONGO_URL backend:v1.0.0`
-- In a new Terminal - `docker run -p 3001:80 frontend:v1.0.0`
+
 
 ## Quickstart for Kubernetes
 Requires building the images first, see the quickstart for Docker section.
@@ -34,7 +28,7 @@ Requires building the images first, see the quickstart for Docker section.
 - Set your Kubernetes context so you're pointing to a Kubernetes environment.
 - `helm install --name mongo --set usePassword=false,replicaSet.enabled=true,service.type=LoadBalancer,replicaSet.replicas.secondary=3 stable/mongodb`
 - `helm install --name backend backend/chart/backend`
-- `helm install --name frontend frontend/chart/frontend`
+
 
 
 ### Docker
@@ -66,9 +60,6 @@ Data from MongoDB is persisted at `$HOME/.docker/Volumes/mongo-mongodb`.
 
 Tested on Mac with Kubernetes (docker-for-desktop).
 
-### Deploying the frontend
-See the frontend folder in this repository. It will discover this backend Kubernetes service and connect to it. The frontend listens on port 3001, the backend listens on port 30555.
-
 ### Deploying the backend
 `helm install --name backend chart/backend`
 
@@ -83,7 +74,7 @@ Data is stored in MongoDB (both in the container and in the persistent volume on
 
 
 ### Like to script things too?
-`./create-todos.sh x` where x is how many todos you would like to create. A POST request is sent to the to create x amount of todos by sending POST requests to the `api/todos endpoint`.
+`./create-todos.sh x` where x is how many todos you would like to create. A POST request is sent to the to create x amount of todos by sending POST requests to the `api/movies endpoint` `api/genres endpoint`.
 
 
 ### Like dashboards?
