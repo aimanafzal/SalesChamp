@@ -1,4 +1,3 @@
-
 Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it.
 
 The backend uses Express and features a `/api/movies` endpoint with CRUD operations enabled.

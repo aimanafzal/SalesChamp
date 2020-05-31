@@ -6,9 +6,9 @@ var assert = require('assert');
 var http = require('http');
 
 var router = require('../server/routers/mongo');
-const Movie = require('../server/model/movie');
-const Genre = require('../server/model/genre');
-const MONGO_CONFIG = require('../server/config/mongo.js');
+const Movie = require('../backend/server/model/movie');
+const Genre = require('../backend/server/model/genre');
+const MONGO_CONFIG = require('../backend/server/config/mongo.js');
 const mongoose = require('mongoose');
 
 let mongoConnect = `mongodb://${MONGO_CONFIG.mongoURL}:27017`;
