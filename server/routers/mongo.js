@@ -62,11 +62,17 @@ module.exports = function (app) {
       });
   });
 
+  app.get('/*', function(req, res, next){ 
+    res.setHeader('Last-Modified', (new Date()));
+    res.setHeader('If-Modified-Since', (new Date()));
+    next(); 
+  }); 
+  
   router.get('/test', (req, res)=>{
     var obj = new _address(); 
     console.log( obj.get());
   })
-  
+
   router.get('/address/:address_id', async (req, res) => {
     var obj = new _address(); 
     obj.getAddress(req.params.address_id, req, res);

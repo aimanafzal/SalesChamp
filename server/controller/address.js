@@ -1,4 +1,5 @@
 'use strict'
+const { json } = require('body-parser');
 const mongoose = require('mongoose');
 const countries = require('../config/countries.json');
 const modal = require('../model/address');
@@ -15,12 +16,15 @@ class address{
     
     async getAddress(address_id, req,res ){
         try {
+            
             var isAvailable = await modal.find({
               _id: address_id
             });
             
             if (isAvailable)
-              res.send(isAvailable ).json();
+            {
+                res.send(isAvailable ).json();
+            }
             else
               res.sendStatus(404).json({
                 message: `Address with ID: ${addressID} does not exists`
@@ -77,8 +81,6 @@ class address{
         try {
             var id = mongoose.Types.ObjectId(id);
             var isDeleted = await modal.findByIdAndDelete(id);
-            console.log('IS-DELETED')
-            console.log(isDeleted)
             if (isDeleted)
               res.sendStatus(204)
             else
