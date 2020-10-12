@@ -1,8 +1,7 @@
 Postman collection can be accessed throug the link give below or a copy of collection is available on the root:
-https://www.getpostman.com/collections/2eac8c3525d5f390eaca
+
 Link to Heroku to get started with APIs call, the mlab for cloud mongodb is already configured.
-https://homitag.herokuapp.com/api/genres/<Your API CALL>
-https://homitag.herokuapp.com/api/movies/<Your API CALL>
+https://sales-champ.herokuapp.com/api/address/<Your API CALL>
 
 Mlab for mongoDB is already connected within the source to get started with calling the APIs on the go. But if you want to configure a local database, the instructions are provided below.
 
@@ -10,8 +9,7 @@ Either you can utilize it by Docker or Kubernetes.
 
 Instructions and code to deploy MongoDB, a backend Node.js microservice that connects to it.
 
-The backend uses Express and features a `/api/movies` endpoint with CRUD operations enabled.
-The backend uses Express and features a `/api/genres` endpoint with CRUD operations enabled.
+The backend uses Express and features a `/api/address` endpoint with CRUD operations enabled.
 Run the test script by using npm test
 
 
@@ -84,7 +82,7 @@ Data is stored in MongoDB (both in the container and in the persistent volume on
 
 
 ### Like to script things too?
-`./script.sh x` where x is how many records you would like to create. A POST request is sent to the to create x amount of records by sending POST requests to the `api/movies endpoint` `api/genres endpoint`.
+`./script.sh x` where x is how many records you would like to create. A POST request is sent to the to create x amount of records by sending POST requests to the `api/address endpoint`.
 
 
 ### Like dashboards?
