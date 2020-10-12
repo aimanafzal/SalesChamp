@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "2854f0b9-2a78-41aa-9230-613ef71755ec",
+		"name": "Sales-Champ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Address by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sales-champ.herokuapp.com/api/address/5f8413b31d6ac462b9ebada4",
+					"protocol": "https",
+					"host": [
+						"sales-champ",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"address",
+						"5f8413b31d6ac462b9ebada4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\": \"PK\",\n    \"city\":\"Karachi\",\n    \"street\":\"G.IQbal\",\n    \"postalcode\":\"60200\",\n    \"number\":6,\n    \"numberAddition\":\"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sales-champ.herokuapp.com/api/address",
+					"protocol": "https",
+					"host": [
+						"sales-champ",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Address",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://sales-champ.herokuapp.com/api/address/5f83fc19c0629e5288b35c92",
+					"protocol": "https",
+					"host": [
+						"sales-champ",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"address",
+						"5f83fc19c0629e5288b35c92"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch Address",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"not at home\",\n    \"name\" : \"Bart Simpson\",\n    \"email\": \"bart@simpson.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sales-champ.herokuapp.com/api/address/5f83fe852aa59c5492d996d8",
+					"protocol": "https",
+					"host": [
+						"sales-champ",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"address",
+						"5f83fe852aa59c5492d996d8"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
