@@ -36,8 +36,6 @@ module.exports = function (app) {
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000
   }).catch(err => console.log(err.reason));
-
-
   let db = mongoose.connection;
 
   // db events
@@ -64,98 +62,38 @@ module.exports = function (app) {
       });
   });
 
-  /// address Section
-  router.get('/address', (req, res) => {
-    address.find(function (err, address) {
-      if (err) {
-        res.status(503).send(err);
-      }
-      res.json(address);
-    });
-  });
-
+  router.get('/test', (req, res)=>{
+    var obj = new _address(); 
+    console.log( obj.get());
+  })
+  
   router.get('/address/:address_id', async (req, res) => {
-    try {
-      var isAvailable = await address.find({
-        _id: req.params.address_id
-      });
-      
-      if (isAvailable)
-        res.send(isAvailable ).json();
-      else
-        res.sendStatus(404).json({
-          message: `Address with ID: ${addressID} does not exists`
-        })
-
-    } catch (err) {
-      res.json({
-        message: `${err}`
-      })
-    }
-
+    var obj = new _address(); 
+    obj.getAddress(req.params.address_id, req, res);
   });
 
   router.post('/address', async (req, res)=>{
+    try {
       const {country, city, street, postalcode, number, numberAddition} = req.body;
       if ( country.length > 2){
         res.status(422).send({ message: 'Invalid Country'})
       }else {
-      var countriesArray  = await countries.filter(function(o){
-        if (o.Code === country ){
-          return o.Code
-        }
-      });
+        var obj = new _address();
+        obj.addAddress(country, city, street, postalcode, number, numberAddition, req, res);
       }
-      
-      try {
-        var isSaved = await new address({
-          country: country,
-          city: city,
-          street: street,
-          postalcode: postalcode,
-          number: number,
-          numberAddition: numberAddition,
-          status: null, 
-          name: null,
-          email: null
-        }).save();
-
-        if (isSaved)
-        {
-          var result = await getLastRecord();  
-          res.status(201).send({
-            result,
-            message: 'Address successfully added!'
-          }).json();
-        }
-        else
-          res.status(409).send({
-            message: 'Faled to add Address!'
-          }).json();
-      } catch (err) {
-        console.log(err)
-      }
-      getLastRecord()
+    } catch (err) {
+      res.send(err.message)
+    }  
   })
 
   router.delete('/address/:address_id', async (req, res) => {
     try {
-      var id = mongoose.Types.ObjectId(req.params.address_id);
-      var isDeleted = await address.findByIdAndDelete(id);
-      
-      if (isDeleted)
-        res.sendStatus(204)
-      else
-      {
-        res.sendStatus(404).send({
-          message: `Failed to delete address with ID: ${id}`
-        }).json();
-        return;
-      }  
+      var obj = new _address();
+      obj.deleteAddress(req.params.address_id, req, res);  
     } catch (err) {
-      res.sendStatus(409).send(err).json()
+      res.send(err.message)
     }
-
+    
   });
 
   
@@ -164,41 +102,13 @@ module.exports = function (app) {
     console.log("Attempting to update an address")
 
     try {
-      const id = req.params.address_id;
-      const { status, name, email} = req.body; 
-      
-      var isUpdated = await address.findByIdAndUpdate(id,{
-        status: status,
-        name: name,
-        email: email
-      })
-      
-      if (isUpdated) {
-        let result = await getRecordById(id); 
-        res.status(200).send({
-          result
-        }).json()
-      }
-      else {
-        res.status(403).send({
-          message: `Failed to update address`
-        }).json()
-      }
+      var obj = new _address();
+      obj.pathAddress(req, res);
+
     } catch (err) {
       res.send(err.message)
     }
   });
-
-  async function getRecordById(id){
-    var result = await address.findById(id);
-    return result;
-  }
-  async function getLastRecord(){
-    var result = await address.findOne().sort({ field: 'asc', _id: -1 }).limit(1)
-    console.log(result);
-    
-    return result;
-  }
 
   app.use('/api', router);
 };
