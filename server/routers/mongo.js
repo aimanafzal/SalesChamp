@@ -3,17 +3,17 @@
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const express = require('express');
-const Movie = require('../model/movie');
-const Genre = require('../model/genre');
+const address = require('../model/address');
+
 const MONGO_CONFIG = require('../config/mongo.js');
 const cors = require('cors');
 
+var _address = require('../controller/address');
+const countries = require('../config/countries.json');
+
 
 module.exports = function (app) {
-
   let router = express.Router();
-
-
   app.use(cors())
 
   // set up other middleware
@@ -64,98 +64,27 @@ module.exports = function (app) {
       });
   });
 
-  /// Movies Section
-  router.get('/movies', (req, res) => {
-    Movie.find(function (err, movies) {
+  /// address Section
+  router.get('/address', (req, res) => {
+    address.find(function (err, address) {
       if (err) {
         res.status(503).send(err);
       }
-      res.json(movies);
+      res.json(address);
     });
   });
 
-  router.post('/movies', async (req, res) => {
-    console.log(`Creating Movie`);
-    const name = req.body.name;
-    const description = req.body.description;
-    const releaseDate = req.body.releaseDate;
-    const genre = req.body.genre;
-    const duration = req.body.duration;
-    const rating = req.body.rating;
-    console.log(`Creating Movie for ${req.body.name} ${description}`);
-    if (!name || !description) {
-      res.status(422).send("Unprocessable Entity");
-      return;
-    }
-    const movie = new Movie({
-
-      name: name,
-      description: description,
-      releaseDate: releaseDate,
-      genre: genre,
-      duration: duration,
-      rating: rating
-
-    });
-
-
+  router.get('/address/:address_id', async (req, res) => {
     try {
-      var isSaved = await movie.save()
-      if (isSaved)
-        res.status(200).send({
-          message: 'Movie successfully added!'
-        }).json();
-      else
-        res.status(409).send({
-          message: 'Faled to add a movie!'
-        }).json();
-    } catch (err) {
-      console.log(err)
-    }
-
-
-  });
-
-  router.put('/movies/:movie_id', async (req, res) => {
-    const movieID = req.params.movie_id
-    console.log(`Attempting to update a movie by ID (${movieID})`)
-    try {
-      var isUpdated = await Movie.findByIdAndUpdate(
-        req.params.movie_id,
-        req.body, {
-        safe: true,
-        upsert: true,
-        new: true
-      })
-      if (isUpdated)
-        res.json({
-          message: `Updated movie ${movieID}`
-        })
-      else
-        res.json({
-          message: `Failed to update movie with ID: ${movieID}`
-        })
-
-    } catch (err) {
-      res.json({
-        message: `${err}`
-      })
-    }
-  });
-
-  router.delete('/movies/:movie_id', async (req, res) => {
-    try {
-      var isDeleted = await Movie.findByIdAndDelete({
-        _id: req.params.movie_id
+      var isAvailable = await address.find({
+        _id: req.params.address_id
       });
-
-      if (isDeleted)
-        res.send(200).json({
-          message: `Movie Deleted with Id: ${movieID}`
-        })
+      
+      if (isAvailable)
+        res.send(isAvailable ).json();
       else
-        res.send(503).json({
-          message: `Failed to delete movie with ID: ${movieID}`
+        res.sendStatus(404).json({
+          message: `Address with ID: ${addressID} does not exists`
         })
 
     } catch (err) {
@@ -166,161 +95,110 @@ module.exports = function (app) {
 
   });
 
-  router.delete('/movies', async (req, res) => {
-    console.log("Attempting to delete all movies")
+  router.post('/address', async (req, res)=>{
+      const {country, city, street, postalcode, number, numberAddition} = req.body;
+      if ( country.length > 2){
+        res.status(422).send({ message: 'Invalid Country'})
+      }else {
+      var countriesArray  = await countries.filter(function(o){
+        if (o.Code === country ){
+          return o.Code
+        }
+      });
+      }
+      
+      try {
+        var isSaved = await new address({
+          country: country,
+          city: city,
+          street: street,
+          postalcode: postalcode,
+          number: number,
+          numberAddition: numberAddition,
+          status: null, 
+          name: null,
+          email: null
+        }).save();
+
+        if (isSaved)
+        {
+          var result = await getLastRecord();  
+          res.status(201).send({
+            result,
+            message: 'Address successfully added!'
+          }).json();
+        }
+        else
+          res.status(409).send({
+            message: 'Faled to add Address!'
+          }).json();
+      } catch (err) {
+        console.log(err)
+      }
+      getLastRecord()
+  })
+
+  router.delete('/address/:address_id', async (req, res) => {
+    try {
+      var id = mongoose.Types.ObjectId(req.params.address_id);
+      var isDeleted = await address.findByIdAndDelete(id);
+      
+      if (isDeleted)
+        res.sendStatus(204)
+      else
+      {
+        res.sendStatus(404).send({
+          message: `Failed to delete address with ID: ${id}`
+        }).json();
+        return;
+      }  
+    } catch (err) {
+      res.sendStatus(409).send(err).json()
+    }
+
+  });
+
+  
+
+  router.patch('/address/:address_id', async (req, res) => {
+    console.log("Attempting to update an address")
 
     try {
-      var isDeleted = await Movie.deleteMany({})
-
-      if (isDeleted) {
-        console.log(`Is Deleted`)
-        res.status(200).send().json({
-          message: `All Movies Deleted `
-        })
+      const id = req.params.address_id;
+      const { status, name, email} = req.body; 
+      
+      var isUpdated = await address.findByIdAndUpdate(id,{
+        status: status,
+        name: name,
+        email: email
+      })
+      
+      if (isUpdated) {
+        let result = await getRecordById(id); 
+        res.status(200).send({
+          result
+        }).json()
       }
       else {
-        res.status(503).send({
-          message: `Failed to delete movies`
+        res.status(403).send({
+          message: `Failed to update address`
         }).json()
       }
     } catch (err) {
-      // res.json({
-      //   message: `${err}`
-      // })
+      res.send(err.message)
     }
   });
 
+  async function getRecordById(id){
+    var result = await address.findById(id);
+    return result;
+  }
+  async function getLastRecord(){
+    var result = await address.findOne().sort({ field: 'asc', _id: -1 }).limit(1)
+    console.log(result);
+    
+    return result;
+  }
 
-  /// Genre Section 
-  router.get('/genres', async (req, res) => {
-    var genres = await Genre.find()
-    try {
-      if (genres) {
-        res.status(200).send({
-          genres
-        })
-      }
-      else {
-        res.status(500).send({ message: `Failed to fetch genres` }).json()
-      }
-    } catch (err) {
-      res.json({
-        message: `${err}`
-      })
-    }
-  });
-
-  router.post('/genres', async (req, res) => {
-    const name = req.body.name;
-    const description = req.body.description;
-    console.log(`Creating Genre for ${req.body.name} ${req.body.description} `);
-
-    if (!name || !description) {
-      res.status(422).send("Unprocessable Entity");
-      return;
-    }
-    try {
-      const genre = new Genre({
-        name: name,
-        description: description
-      });
-      var genreSaved = await genre.save()
-
-      if (genreSaved) {
-        res.status(200).send({
-          message: 'Genre successfully added!'
-        }).json();
-      }
-      else {
-        res.status(500).send({
-          message: 'Failed to add genre!'
-        }).json();
-      }
-    } catch (err) {
-      res.json({
-        message: `${err}`
-      })
-    }
-
-
-  });
-
-  router.put('/genres/:genre_id', async (req, res) => {
-    const genreID = req.params.genre_id
-    console.log(`Attempting to update a genre by ID (${genreID})`)
-
-    try {
-      var isUpdated = await Genre.findByIdAndUpdate(
-        req.params.genre_id,
-        req.body, {
-        safe: true,
-        upsert: true,
-        new: true
-      })
-
-      if (isUpdated) {
-        res.status(200).send({ message: 'Genre updated successfully!' })
-      }
-      else {
-        res.status(500).send({ message: 'Failed to update genre !' })
-      }
-    } catch (err) {
-
-    }
-
-
-  });
-
-  router.delete('/genres/:genre_id', async (req, res) => {
-
-    try {
-      var genreId = req.params.genre_id
-      var isDeleted = await Genre.findByIdAndDelete({
-        _id: req.params.genre_id
-      });
-
-      if (isDeleted)
-        res.send(200).json({
-          message: `Genere Deleted with Id: ${genreId}`
-        })
-      else
-        res.send(409).json({
-          message: `Failed to delete genre with ID: ${genreId}`
-        })
-
-    } catch (err) {
-      res.json({
-        message: `${err}`
-      })
-    }
-
-  });
-
-  router.delete('/genres', async (req, res) => {
-    console.log("Attempting to delete all genres")
-
-    var isDeleted = await Genre.deleteMany({})
-
-    try {
-
-      if (isDeleted)
-        res.send(200).json({
-          message: `Generes Deleted`
-        })
-      else
-        res.send(409).json({
-          message: `Failed to delete genres`
-        })
-
-    }
-    catch (err) {
-      console.log(err)
-    }
-
-
-
-
-
-  });
   app.use('/api', router);
 };
